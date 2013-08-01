@@ -40,6 +40,9 @@
 
 (defvar my-packages '(better-defaults find-file-in-project smex))
 
+(when (not package-archive-contents)
+  (package-refresh-contents))
+
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
