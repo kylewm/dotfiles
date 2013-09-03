@@ -11,9 +11,7 @@
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 ;; This is your old M-x.
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
-
 (global-set-key (kbd "<f7>") 'recompile)
-
 (global-set-key (kbd "C-x f") 'ffip)
 
 (add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
@@ -23,8 +21,9 @@
 (setq inhibit-startup-screen t)
 
 (if window-system
-    (load-theme 'tango-dark))
-
+    (progn
+      (load-theme 'tango-dark)
+      (set-face-font 'default "Monospace-10")))
 
 (defvar my-packages '(better-defaults find-file-in-project smex))
 
