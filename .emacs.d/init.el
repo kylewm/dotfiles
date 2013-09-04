@@ -25,6 +25,14 @@
       (load-theme 'tango-dark)
       (set-face-font 'default "Monospace-10")))
 
+
+(setq load-path (cons (expand-file-name "/usr/share/cmake-2.8/editors/emacs/") load-path))
+(require 'cmake-mode)
+(setq auto-mode-alist
+      (append '(("CMakeLists\\.txt\\'" . cmake-mode)
+                ("\\.cmake\\'" . cmake-mode))
+              auto-mode-alist))
+
 (defvar my-packages '(better-defaults find-file-in-project smex))
 
 (when (not package-archive-contents)
