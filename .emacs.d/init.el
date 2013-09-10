@@ -3,6 +3,18 @@
   '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize)
 
+(defvar my-packages '(better-defaults
+                      find-file-in-project smex
+                      soft-charcoal-theme))
+
+(when (not package-archive-contents)
+  (package-refresh-contents))
+
+(dolist (p my-packages)
+  (when (not (package-installed-p p))
+    (package-install p)))
+
+
 (defvar ffip-project-file '(".hg" ".git"))
 (defvar ffip-limit 4096)
 (defvar ffip-patterns '("*.java" "*.cpp" "*.h" "*.xml" "*.gradle" "*.txt"))
@@ -20,24 +32,20 @@
 (setq column-number-mode t)
 (setq inhibit-startup-screen t)
 
-(if window-system
-    (progn
-      (load-theme 'tango-dark)
-      (set-face-font 'default "Monospace-10")))
+(setq load-path
+      (cons (expand-file-name "C:\\Apps\\CMake 2.8\\share\\cmake-2.8\\editors\\emacs")
+            (cons (expand-file-name "/usr/share/cmake-2.8/editors/emacs/") load-path)))
 
-
-(setq load-path (cons (expand-file-name "/usr/share/cmake-2.8/editors/emacs/") load-path))
 (require 'cmake-mode)
 (setq auto-mode-alist
       (append '(("CMakeLists\\.txt\\'" . cmake-mode)
                 ("\\.cmake\\'" . cmake-mode))
               auto-mode-alist))
 
-(defvar my-packages '(better-defaults find-file-in-project smex))
+(setq custom-safe-themes t)
 
-(when (not package-archive-contents)
-  (package-refresh-contents))
-
-(dolist (p my-packages)
-  (when (not (package-installed-p p))
-    (package-install p)))
+(if window-system
+    (progn
+      (load-theme 'soft-charcoal)
+      (set-face-font 'default (if (eq window-system 'w32)
+                                  "Consolas-10" "Monospace-10"))))
