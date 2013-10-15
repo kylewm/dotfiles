@@ -52,14 +52,19 @@
       vc-follow-symlinks nil)
 
 (setq load-path
-      (cons (expand-file-name "C:\\Apps\\CMake 2.8\\share\\cmake-2.8\\editors\\emacs")
-            (cons (expand-file-name "/usr/share/cmake-2.8/editors/emacs/") load-path)))
-
+      (append (list
+               (expand-file-name "/usr/share/git-core/emacs")
+               (expand-file-name "C:\\Apps\\CMake 2.8\\share\\cmake-2.8\\editors\\emacs")
+               (expand-file-name "/usr/share/cmake-2.8/editors/emacs/"))
+              load-path))
+      
 (require 'cmake-mode)
 (setq auto-mode-alist
       (append '(("CMakeLists\\.txt\\'" . cmake-mode)
                 ("\\.cmake\\'" . cmake-mode))
               auto-mode-alist))
+
+(require 'git)
 
 (if window-system
     (progn
