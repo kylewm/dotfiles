@@ -16,6 +16,7 @@
   (when (not (package-installed-p p))
     (package-install p)))
 
+(add-to-list 'load-path "~/.emacs.d/lisp/")
 
 (defvar ffip-project-file '(".hg" ".git"))
 (defvar ffip-limit 4096)
@@ -50,24 +51,17 @@
                                    (c-default-style "linux"))
       custom-safe-themes t
       vc-follow-symlinks nil)
-
-(setq load-path
-      (append (list
-               (expand-file-name "/usr/share/git-core/emacs")
-               (expand-file-name "C:\\Apps\\CMake 2.8\\share\\cmake-2.8\\editors\\emacs")
-               (expand-file-name "/usr/share/cmake-2.8/editors/emacs/"))
-              load-path))
       
-(require 'cmake-mode)
-(setq auto-mode-alist
-      (append '(("CMakeLists\\.txt\\'" . cmake-mode)
-                ("\\.cmake\\'" . cmake-mode))
-              auto-mode-alist))
-
-(require 'git)
+(autoload 'hg-status "mercurial" "Entry point into hg-status mode." t)
+(autoload 'git-status "git" "Entry point into git-status mode." t)
+(autoload 'git-blame-mode "git-blame"
+  "Minor mode for incremental blame for Git." t)
+(autoload 'cmake-mode "cmake-mode" "A major mode for CMake" t)
 
 (if window-system
     (progn
       (load-theme 'soft-charcoal)
       (set-face-font 'default (if (eq window-system 'w32)
                                   "Consolas-10" "Monospace-10"))))
+
+(eshell)
