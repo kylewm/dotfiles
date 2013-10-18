@@ -7,6 +7,7 @@
                       find-file-in-project smex
                       soft-charcoal-theme
                       buffer-move
+                      markdown-mode
                       highlight-symbol))
 
 (when (not package-archive-contents)
@@ -41,6 +42,18 @@
 (global-set-key [f3] 'highlight-symbol-next)
 (global-set-key [(shift f3)] 'highlight-symbol-prev)
 
+;; Change size of markdown headers
+(add-hook 'markdown-mode-hook
+          (lambda ()
+              (message "Entering markdown mode")
+              (set-face-attribute 'markdown-header-delimiter-face nil :underline t :weight 'bold)
+              (set-face-attribute 'markdown-header-face-1 nil  :height 1.5)
+              (set-face-attribute 'markdown-header-face-2 nil  :height 1.3)
+              (set-face-attribute 'markdown-header-face-3 nil  :height 1.2 :underline t)
+              (set-face-attribute 'markdown-header-face-4 nil  :height 1.1 :underline t)
+              (set-face-attribute 'markdown-header-face-5 nil  :underline t)
+              (set-face-attribute 'markdown-header-face-6 nil  :underline t)))
+
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
 (add-to-list 'auto-mode-alist '("CMakeLists\\.txt\\'" . cmake-mode))
@@ -58,10 +71,9 @@
   "Minor mode for incremental blame for Git." t)
 (autoload 'cmake-mode "cmake-mode" "A major mode for CMake" t)
 
+
 (if window-system
     (progn
       (load-theme 'soft-charcoal)
       (set-face-font 'default (if (eq window-system 'w32)
-                                  "Consolas-10" "Monospace-10"))))
-
-(eshell)
+                                  "Consolas-10" "Liberation Mono-10"))))
