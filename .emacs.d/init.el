@@ -9,7 +9,9 @@
                       groovy-mode
                       soft-charcoal-theme
                       buffer-move
-                      highlight-symbol))
+                      highlight-symbol
+                      htmlize
+                      org))
 
 (when (not package-archive-contents)
   (package-refresh-contents))
