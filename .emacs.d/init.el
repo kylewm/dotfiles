@@ -4,7 +4,9 @@
 (package-initialize)
 
 (defvar my-packages '(better-defaults
-                      find-file-in-project smex
+                      find-file-in-project
+                      smex
+                      groovy-mode
                       soft-charcoal-theme
                       buffer-move
                       highlight-symbol))
@@ -29,6 +31,7 @@
 (global-set-key (kbd "<f6>") 'compile)
 (global-set-key (kbd "<f7>") 'recompile)
 (global-set-key (kbd "C-x f") 'ffip)
+(global-set-key (kbd "C-c o") 'ff-find-other-file)
 
 (global-set-key (kbd "<C-S-up>")     'buf-move-up)
 (global-set-key (kbd "<C-S-down>")   'buf-move-down)
@@ -50,7 +53,9 @@
       safe-local-variable-values '((eval highlight-regexp "	")
                                    (c-default-style "linux"))
       custom-safe-themes t
-      vc-follow-symlinks nil)
+      vc-follow-symlinks nil
+      
+      org-src-fontify-natively t)
       
 (autoload 'hg-status "mercurial" "Entry point into hg-status mode." t)
 (autoload 'git-status "git" "Entry point into git-status mode." t)
@@ -63,5 +68,3 @@
       (load-theme 'soft-charcoal)
       (set-face-font 'default (if (eq window-system 'w32)
                                   "Consolas-10" "Monospace-10"))))
-
-(eshell)
