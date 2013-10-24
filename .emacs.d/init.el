@@ -83,8 +83,4 @@
     (progn
       (load-theme 'soft-charcoal)
       (set-face-font 'default (if (eq window-system 'w32)
-<<<<<<< HEAD
-                                  "Consolas-10" "Monospace-10"))))
-=======
                                   "Consolas-10" "Liberation Mono-10"))))
->>>>>>> 204f240de23fc40c51c5a53a9b5bd25440dc3d2a
