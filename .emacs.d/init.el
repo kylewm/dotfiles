@@ -12,8 +12,7 @@
                       buffer-move
                       markdown-mode
                       highlight-symbol
-                      htmlize
-                      org))
+                      ctags))
 
 (when (not package-archive-contents)
   (package-refresh-contents))
@@ -30,23 +29,30 @@
 
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
-;; This is your old M-x.
-(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
-(global-set-key (kbd "<f6>") 'compile)
-(global-set-key (kbd "<f7>") 'recompile)
-(global-set-key (kbd "C-x f") 'ffip)
-(global-set-key (kbd "C-c o") 'ff-find-other-file)
+(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command);; This is your old M-x.
+
+(global-set-key (kbd "<f6>")         'compile)
+(global-set-key (kbd "<f7>")         'recompile)
+(global-set-key (kbd "C-x f")        'ffip)
+(global-set-key (kbd "C-c o")        'ff-find-other-file)
 
 (global-set-key (kbd "<C-S-up>")     'buf-move-up)
 (global-set-key (kbd "<C-S-down>")   'buf-move-down)
 (global-set-key (kbd "<C-S-left>")   'buf-move-left)
 (global-set-key (kbd "<C-S-right>")  'buf-move-right)
 
+(global-set-key (kbd "C-c C-t")    'toggle-truncate-lines)
+
+;; ctags
+(global-set-key (kbd "<f8>") 'ctags-create-or-update-tags-table)
+;;(global-set-key (kbd "M-.")  'ctags-search)
+
+
 ;; F3 highlight symbols like vim's *
 (add-hook 'prog-mode-hook (lambda () (highlight-symbol-mode)))
 (setq highlight-symbol-on-navigation-p t)
-(global-set-key [f3] 'highlight-symbol-next)
-(global-set-key [(shift f3)] 'highlight-symbol-prev)
+(global-set-key (kbd "<f3>") 'highlight-symbol-next)
+(global-set-key (kbd "<S-f3>") 'highlight-symbol-prev)
 
 ;; Change size of markdown headers
 (add-hook 'markdown-mode-hook
@@ -60,24 +66,33 @@
               (set-face-attribute 'markdown-header-face-5 nil  :underline t)
               (set-face-attribute 'markdown-header-face-6 nil  :underline t)))
 
+;;(add-hook 'c-mode-common-hook
+;;          (lambda ()
+;;            (c-set-style "linux")))
+
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
 (add-to-list 'auto-mode-alist '("CMakeLists\\.txt\\'" . cmake-mode))
 
 (setq column-number-mode t
       inhibit-startup-screen t
-      safe-local-variable-values '((eval highlight-regexp "	")
-                                   (c-default-style "linux"))
+      safe-local-variable-values '((eval highlight-regexp "	"))
       custom-safe-themes t
       vc-follow-symlinks nil
-      
-      org-src-fontify-natively t)
-      
+      org-src-fontify-natively t
+      c-default-style '((java-mode . "java")
+                        (c++-mode . "linux")
+                        (other . "gnu"))
+      ;; by default python removes '' from the sys.path when starting
+      ;; which prevents us from loading stuff from the current directory
+      python-remove-cwd-from-path nil)
+
 (autoload 'hg-status "mercurial" "Entry point into hg-status mode." t)
 (autoload 'git-status "git" "Entry point into git-status mode." t)
 (autoload 'git-blame-mode "git-blame"
   "Minor mode for incremental blame for Git." t)
 (autoload 'cmake-mode "cmake-mode" "A major mode for CMake" t)
+(autoload 'ctags-create-or-update-tags-table "ctags" "Ctags generation and navigation" t)
 
 
 ;; TODO move to a separate configuration file
