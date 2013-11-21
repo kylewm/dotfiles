@@ -8,6 +8,7 @@
                       smex
                       groovy-mode
                       soft-charcoal-theme
+                      color-theme-sanityinc-tomorrow
                       buffer-move
                       markdown-mode
                       highlight-symbol
@@ -53,6 +54,9 @@
 (global-set-key (kbd "<f3>") 'highlight-symbol-next)
 (global-set-key (kbd "<S-f3>") 'highlight-symbol-prev)
 
+;; F5 to refresh dired buffer
+(eval-after-load 'dired '(define-key dired-mode-map (kbd "<f5>") 'revert-buffer))
+          
 ;; Change size of markdown headers
 (add-hook 'markdown-mode-hook
           (lambda ()
@@ -96,6 +100,18 @@
 
 (if window-system
     (progn
-      (load-theme 'soft-charcoal)
+      (load-theme 'sanityinc-tomorrow-night)
       (set-face-font 'default (if (eq window-system 'w32)
                                   "Consolas-10" "Liberation Mono-10"))))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(semanticdb-project-roots (quote ("~/projects/midas/aurora-engine"))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
