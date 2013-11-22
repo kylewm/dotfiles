@@ -96,35 +96,37 @@
 
 
 ;; TODO move to a separate configuration file
+(autoload 'mu4e "mu4e")
 
-(autoload 'mu4e "mu4e" "mu4e email reader" t)
+(setq
+ mu4e-maildir       "~/Mail/"
+ mu4e-sent-folder   "/kylewm/Sent"
+ mu4e-drafts-folder "/kylewm/Drafts"
+ mu4e-trash-folder  "/kylewm/Trash"
+ mu4e-refile-folder "/kylewm/Archive"
+ user-mail-address "kyle@kylewm.com"
+ smtpmail-default-smtp-server "orin.kylewm.com"
+ smtpmail-local-domain "kylewm.com"
+ smtpmail-smtp-server "orin.kylewm.com"
+ smtpmail-stream-type 'starttls
+ smtpmail-smtp-service 587)
 
-;; these are actually the defaults
-(setq mu4e-maildir       "~/Mail"      ;; top-level Maildir
-      mu4e-sent-folder   "/sent"       ;; folder for sent messages
-      mu4e-drafts-folder "/drafts"     ;; unfinished messages
-      mu4e-trash-folder  "/trash"      ;; trashed messages
-      mu4e-refile-folder "/archive")   ;; saved messages
 
-(setq mu4e-get-mail-command "offlineimap"   ;; or fetchmail, or ...
-      mu4e-update-interval 300)             ;; update every 5 minutes
-
-;; smtp mail setting; these are the same that `gnus' uses.
-(setq send-mail-function           'smtpmail-send-it
-      message-send-mail-function   'smtpmail-send-it
-      smtpmail-default-smtp-server "orin.kylewm.com"
-      smtpmail-smtp-server         "orin.kylewm.com"
-      smtpmail-smtp-service        587
-      smtpmail-local-domain        "kylewm.com")
-
-     ;; general emacs mail settings; used when composing e-mail
-     ;; the non-mu4e-* stuff is inherited from emacs/message-mode
-(setq mu4e-reply-to-address "kyle@kylewm.com"
-      user-mail-address "kyle@kylewm.com"
-      user-full-name  "Kyle Mahan")
 
 (if window-system
     (progn
       (load-theme 'sanityinc-tomorrow-night)
       (set-face-font 'default (if (eq window-system 'w32)
                                   "Consolas-10" "Liberation Mono-10"))))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(send-mail-function (quote smtpmail-send-it)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
