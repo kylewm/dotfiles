@@ -8,7 +8,7 @@
                       smex
                       groovy-mode
                       soft-charcoal-theme
-                      color-theme-sanityinc-tomorrow 
+                      color-theme-sanityinc-tomorrow
                       buffer-move
                       markdown-mode
                       highlight-symbol
@@ -54,6 +54,9 @@
 (global-set-key (kbd "<f3>") 'highlight-symbol-next)
 (global-set-key (kbd "<S-f3>") 'highlight-symbol-prev)
 
+;; F5 to refresh dired buffer
+(eval-after-load 'dired '(define-key dired-mode-map (kbd "<f5>") 'revert-buffer))
+          
 ;; Change size of markdown headers
 (add-hook 'markdown-mode-hook
           (lambda ()
