@@ -22,7 +22,6 @@
     (package-install p)))
 
 (add-to-list 'load-path "~/.emacs.d/lisp/")
-(add-to-list 'load-path "~/.emacs.d/function-args/")
 
 (autoload 'find-file-in-project "find-file-in-project" "Quickly jump to files in the current project" t)
 (defvar ffip-project-file '(".hg" ".git"))
