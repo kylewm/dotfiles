@@ -32,8 +32,7 @@
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command);; This is your old M-x.
 
-(global-set-key (kbd "<f6>")         'compile)
-(global-set-key (kbd "<f7>")         'recompile)
+
 (global-set-key (kbd "C-x f")        'ffip)
 (global-set-key (kbd "C-c o")        'ff-find-other-file)
 
@@ -108,8 +107,58 @@
 (smart-tabs-insinuate 'c 'java 'c++)
 (electric-indent-mode)
 
+
+
+;; C++ compilation stuff
+
+;; auto-hide on successful compilation
+(add-to-list 'compilation-finish-functions
+             (lambda (buf str)
+               (unless (string-match "exited abnormally" str)
+                 (run-at-time "2 sec" nil 'delete-windows-on
+                              (get-buffer-create "*compilation*"))
+                 (message "No compilation errors!"))))
+
+(defcustom aurora-compile-target-debug "Debug_x64"
+  "Debug compile target for aurora-compile")
+
+(defcustom aurora-compile-target-release "RelWithDebInfo_x64"
+  "Release compile target for aurora-compile")
+
+(defcustom aurora-compile-target aurora-compile-target-debug
+  "Current compilation target")
+
+(defun toggle-aurora-compile-target ()
+  "Flip back and forth between Release and Debug compilation targets"
+  (interactive)
+  (let ((target (if (equal aurora-compile-target aurora-compile-target-debug)
+                    aurora-compile-target-release aurora-compile-target-debug)))
+    (message "Set compilation target to %s" target)
+    (setq aurora-compile-target target)))
+
+(defun aurora-compile (&optional target)
+  "Aurora projects have a 'makefiles' directory at their
+root. Automatically finds the location of the makefiles directory
+and compiles the target defined by aurora-compile-target "
+  (interactive)
+  (let*
+      ((filename (buffer-file-name))
+       (root-dir (and filename (locate-dominating-file filename "makefiles")))
+       (make-dir (and root-dir (format "%s/makefiles/%s" root-dir (or target aurora-compile-target)))))
+    (if make-dir
+        (compile (format "make -C %s" make-dir))
+      (message "Could not find 'makefiles' for %s" (buffer-name)))))
+
+(add-hook 'c++-mode-hook
+          (lambda ()
+            (local-set-key (kbd "<f6>") 'toggle-aurora-compile-target)
+            (local-set-key (kbd "<f7>") 'aurora-compile)))
+
+
+;; theme and font
+
 (if window-system
     (progn
-      (load-theme 'sanityinc-tomorrow-night)
+      (load-theme 'solarized-light)
       (set-face-font 'default (if (eq window-system 'w32)
                                   "Consolas-10" "Liberation Mono-10"))))
