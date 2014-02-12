@@ -12,7 +12,8 @@
                       markdown-mode
                       highlight-symbol
                       ctags
-                      smart-tabs-mode))
+                      smart-tabs-mode
+                      smart-mode-line))
 
 (when (not package-archive-contents)
   (package-refresh-contents))
@@ -107,7 +108,8 @@
 (smart-tabs-insinuate 'c 'java 'c++)
 (electric-indent-mode)
 
-
+(require 'auto-complete-config)
+(global-auto-complete-mode t)
 
 ;; C++ compilation stuff
 
@@ -125,18 +127,7 @@
 (defcustom aurora-compile-target-release "RelWithDebInfo_x64"
   "Release compile target for aurora-compile")
 
-(defcustom aurora-compile-target aurora-compile-target-debug
-  "Current compilation target")
-
-(defun toggle-aurora-compile-target ()
-  "Flip back and forth between Release and Debug compilation targets"
-  (interactive)
-  (let ((target (if (equal aurora-compile-target aurora-compile-target-debug)
-                    aurora-compile-target-release aurora-compile-target-debug)))
-    (message "Set compilation target to %s" target)
-    (setq aurora-compile-target target)))
-
-(defun aurora-compile (&optional target)
+(defun aurora-compile (target)
   "Aurora projects have a 'makefiles' directory at their
 root. Automatically finds the location of the makefiles directory
 and compiles the target defined by aurora-compile-target "
@@ -146,19 +137,54 @@ and compiles the target defined by aurora-compile-target "
        (root-dir (and filename (locate-dominating-file filename "makefiles")))
        (make-dir (and root-dir (format "%s/makefiles/%s" root-dir (or target aurora-compile-target)))))
     (if make-dir
-        (compile (format "make -C %s" make-dir))
+        (compile (format "make -j8 -C %s" make-dir))
       (message "Could not find 'makefiles' for %s" (buffer-name)))))
+
+(defun aurora-compile-debug ()
+  (interactive)
+  (aurora-compile aurora-compile-target-debug))
+
+(defun aurora-compile-release ()
+  (interactive)
+  (aurora-compile aurora-compile-target-release))
+
+
+(add-hook 'cmake-mode-hook
+          (lambda ()
+            (local-set-key (kbd "<f6>") 'aurora-compile-debug)
+            (local-set-key (kbd "<f7>") 'aurora-compile-release)))
 
 (add-hook 'c++-mode-hook
           (lambda ()
-            (local-set-key (kbd "<f6>") 'toggle-aurora-compile-target)
-            (local-set-key (kbd "<f7>") 'aurora-compile)))
+            (local-set-key (kbd "<f6>") 'aurora-compile-debug)
+            (local-set-key (kbd "<f7>") 'aurora-compile-release)))
 
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (semantic-mode t)
+            (semantic-idle-summary-mode t)))
+
+(sml/setup)
 
 ;; theme and font
 
+(defcustom default-light-color-theme 'solarized-light
+  "default light theme")
+
+(defcustom default-dark-color-theme 'solarized-dark
+  "default dark theme")
+
+(defun toggle-dark-light-theme ()
+  (interactive)
+
+  (let ((is-light (find default-light-color-theme custom-enabled-themes)))
+    (dolist (theme custom-enabled-themes)
+      (disable-theme theme))
+    (load-theme (if is-light default-dark-color-theme default-light-color-theme))))
+
 (if window-system
     (progn
+      (global-set-key (kbd "<f11>") 'toggle-dark-light-theme)
       (load-theme 'solarized-light)
       (set-face-font 'default (if (eq window-system 'w32)
                                   "Consolas-10" "Liberation Mono-10"))))
