@@ -13,7 +13,8 @@
                       highlight-symbol
                       ctags
                       smart-tabs-mode
-                      smart-mode-line))
+                      smart-mode-line
+                      cmake-mode))
 
 (when (not package-archive-contents)
   (package-refresh-contents))
@@ -94,7 +95,8 @@
                         (other . "gnu"))
       ;; by default python removes '' from the sys.path when starting
       ;; which prevents us from loading stuff from the current directory
-      python-remove-cwd-from-path nil)
+      python-remove-cwd-from-path nil
+      initial-scratch-message nil)
 
 (add-to-list 'load-path "/usr/share/doc/mercurial-common/examples")
 
@@ -106,7 +108,10 @@
 (autoload 'ctags-create-or-update-tags-table "ctags" "Ctags generation and navigation" t)
 
 (smart-tabs-insinuate 'c 'java 'c++)
-(electric-indent-mode)
+(electric-indent-mode 1)
+
+;; shim for sr-speedbar
+(defalias 'ad-advised-definition-p 'ad-is-advised)
 
 (require 'auto-complete-config)
 (global-auto-complete-mode t)
@@ -114,12 +119,12 @@
 ;; C++ compilation stuff
 
 ;; auto-hide on successful compilation
-(add-to-list 'compilation-finish-functions
-             (lambda (buf str)
-               (unless (string-match "exited abnormally" str)
-                 (run-at-time "2 sec" nil 'delete-windows-on
-                              (get-buffer-create "*compilation*"))
-                 (message "No compilation errors!"))))
+;;(add-to-list 'compilation-finish-functions
+;;             (lambda (buf str)
+;;               (unless (string-match "exited abnormally" str)
+;;                 (run-at-time "2 sec" nil 'delete-windows-on
+;;                              (get-buffer-create "*compilation*"))
+;;                 (message "No compilation errors!"))))
 
 (defcustom aurora-compile-target-debug "Debug_x64"
   "Debug compile target for aurora-compile")
@@ -149,15 +154,16 @@ and compiles the target defined by aurora-compile-target "
   (aurora-compile aurora-compile-target-release))
 
 
+(defun set-aurora-compile-keys ()
+  (local-set-key (kbd "<f6>") 'aurora-compile-debug)
+  (local-set-key (kbd "<f7>") 'aurora-compile-release))
+
 (add-hook 'cmake-mode-hook
-          (lambda ()
-            (local-set-key (kbd "<f6>") 'aurora-compile-debug)
-            (local-set-key (kbd "<f7>") 'aurora-compile-release)))
+          'set-aurora-compile-keys)
 
 (add-hook 'c++-mode-hook
-          (lambda ()
-            (local-set-key (kbd "<f6>") 'aurora-compile-debug)
-            (local-set-key (kbd "<f7>") 'aurora-compile-release)))
+          'set-aurora-compile-keys
+          'subword-mode)
 
 (add-hook 'c-mode-common-hook
           (lambda ()
@@ -166,12 +172,15 @@ and compiles the target defined by aurora-compile-target "
 
 (sml/setup)
 
+(eval-after-load 
+    'erc '(add-to-list 'erc-modules 'notifications))
+
 ;; theme and font
 
-(defcustom default-light-color-theme 'solarized-light
+(defcustom default-light-color-theme sanityinc-tomorrow-day
   "default light theme")
 
-(defcustom default-dark-color-theme 'solarized-dark
+(defcustom default-dark-color-theme sanityinc-tomorrow-night
   "default dark theme")
 
 (defun toggle-dark-light-theme ()
@@ -188,3 +197,6 @@ and compiles the target defined by aurora-compile-target "
       (load-theme 'solarized-light)
       (set-face-font 'default (if (eq window-system 'w32)
                                   "Consolas-10" "Liberation Mono-10"))))
+
+(provide 'init)
+;;; init.el ends here
