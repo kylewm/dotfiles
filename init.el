@@ -186,7 +186,7 @@ and compiles the target defined by aurora-compile-target "
 (defun toggle-dark-light-theme ()
   (interactive)
 
-  (let ((is-light (find default-light-color-theme custom-enabled-themes)))
+  (let ((is-light (member default-light-color-theme custom-enabled-themes)))
     (dolist (theme custom-enabled-themes)
       (disable-theme theme))
     (load-theme (if is-light default-dark-color-theme default-light-color-theme))))
