@@ -1,3 +1,7 @@
+;;; init.el --- my emacs configuration
+;;; Commentary:
+;;; Code:
+
 (require 'package)
 (add-to-list 'package-archives
   '("melpa" . "http://melpa.milkbox.net/packages/") t)
@@ -64,7 +68,7 @@
 
 ;; F5 to refresh dired buffer
 (eval-after-load 'dired '(define-key dired-mode-map (kbd "<f5>") 'revert-buffer))
-          
+
 ;; Change size of markdown headers
 (add-hook 'markdown-mode-hook
           (lambda ()
@@ -110,11 +114,16 @@
 (smart-tabs-insinuate 'c 'java 'c++)
 (electric-indent-mode 1)
 
-;; shim for sr-speedbar
-(defalias 'ad-advised-definition-p 'ad-is-advised)
+(add-hook 'python-mode (lambda () (electric-indent-local-mode nil)))
 
 (require 'auto-complete-config)
 (global-auto-complete-mode t)
+
+(global-flycheck-mode)
+
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+(setq erc-hide-list '("JOIN" "PART" "QUIT"))
 
 ;; C++ compilation stuff
 
@@ -172,15 +181,24 @@ and compiles the target defined by aurora-compile-target "
 
 (sml/setup)
 
-(eval-after-load 
+(eval-after-load
     'erc '(add-to-list 'erc-modules 'notifications))
+
+
+(global-set-key "\C-cef" (lambda () (interactive)
+                           (erc :server "irc.freenode.net" :port "6667"
+                                :nick "kylewm")))
+
+(global-set-key "\C-ceb" (lambda () (interactive)
+                           (erc :server "localhost" :port "6667"
+                                :nick "kmahan")))
 
 ;; theme and font
 
-(defcustom default-light-color-theme sanityinc-tomorrow-day
+(defcustom default-light-color-theme 'sanityinc-tomorrow-day
   "default light theme")
 
-(defcustom default-dark-color-theme sanityinc-tomorrow-night
+(defcustom default-dark-color-theme 'sanityinc-tomorrow-night
   "default dark theme")
 
 (defun toggle-dark-light-theme ()
@@ -193,10 +211,24 @@ and compiles the target defined by aurora-compile-target "
 
 (if window-system
     (progn
-      (global-set-key (kbd "<f11>") 'toggle-dark-light-theme)
-      (load-theme 'solarized-light)
+      (global-set-key (kbd "<f10>") 'toggle-dark-light-theme)
+      (load-theme 'sanityinc-tomorrow-day)
       (set-face-font 'default (if (eq window-system 'w32)
-                                  "Consolas-10" "Liberation Mono-10"))))
+                                  "Consolas-10" "Monospace-10"))))
 
 (provide 'init)
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(erc-button-url-regexp "\\(www\\.\\|\\(s?https?\\|ftp\\|file\\|gopher\\|news\\|telnet\\|wais\\|mailto\\):\\)\\(//[-a-zA-Z0-9_.]+:[0-9]*\\)?[-a-zA-Z0-9_=!?#$@~`%&*+\\/:;.,()]+[-a-zA-Z0-9_=#$@~`%&*+\\/]")
+ '(znc-servers (quote (("orin.kylewm.com" 9001 nil ((kylewm "kylewm" "shakira")))))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+(put 'upcase-region 'disabled nil)
